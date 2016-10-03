@@ -1,0 +1,208 @@
+<main>
+    <h1 class="headercss"><img src="http://www.newton.se/content/themes/newton/assets/img/pngs/logo-footer.png" alt="Logo" />
+    Välkommen: {{name}} 
+    <button style="display: inline" ng-click="logout()" id="LogOut" type="button type" class="pull-right btn btn-info btn-lg"> Logout</button>
+</h1>
+    <section class="col-md-12">
+        <h2>Användare</h2>
+        <p class="col-md-4">
+            <input type="text" placeholder="Filtrera efter efternamn" class="text-box" ng-model="filterLastNames"/>
+        </p>
+
+        <ul class="nav nav-tabs">
+            <li><a data-toggle="tab" ng-click="closeTabs(); showStudents = true;">Student</a></li>
+            <li><a data-toggle="tab" ng-click="closeTabs(); showTeachers = true;">Lärare</a></li>
+            <li><a data-toggle="tab" ng-click="closeTabs(); showAdmins = true;">Administratör</a></li>
+        </ul>
+
+        <article class="tab-content table-max-height-300">
+            <table ng-show="showStudents" class="table table-hover" id="userTable">
+                <thead>
+                    <tr>
+                        <th>Förnamn</th>
+                        <th>Efternamn</th>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="student in students | filter: {lastName: filterLastNames}">
+                        <td>{{student.firstName}}</td>
+                        <td>{{student.lastName}}</td>
+                        <td>{{student.username}}</td>
+                        <td>{{student.password}}</td>
+                        <td>
+                            <button ng-click="removeUser(student.username)">Ta bort</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table ng-show="showTeachers" class="table table-hover" id="userTable">
+                <thead>
+                    <tr>
+                        <th>Förnamn</th>
+                        <th>Efternamn</th>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="teacher in teachers | filter: {lastName: filterLastNames}" ng-click="selectUserName(teacher.username)">
+                        <td>{{teacher.firstName}}</td>
+                        <td>{{teacher.lastName}}</td>
+                        <td>{{teacher.username}}</td>
+                        <td>{{teacher.password}}</td>
+                        <td>
+                            <button ng-click="removeUser(teacher.username)">Ta bort</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table ng-show="showAdmins" class="table table-hover" id="userTable">
+                <thead>
+                    <tr>
+                        <th>Förnamn</th>
+                        <th>Efternamn</th>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="admin in admins | filter: {lastName: filterLastNames}" ng-click="selectUserName(admin.username)">
+                        <td>{{admin.firstName}}</td>
+                        <td>{{admin.lastName}}</td>
+                        <td>{{admin.username}}</td>
+                        <td>{{admin.password}}</td>
+                        <td>
+                            <button ng-click="removeUser(admin.username)">Ta bort</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </article>
+
+        <button ng-if="showStudents || showTeachers || showAdmins" data-toggle="modal" data-target="#addUserModal">Lägg till användare</button>
+        <section id="addUserModal" class="modal fade" role="dialog">
+            <main class="modal-dialog popupSize">
+                <div class="modal-content">
+                    <button type="button" class="close" data-dismiss="modal">x</button>
+                    <h4 class="modal-title">Lägg till {{showStudents ? "student" : showTeachers ? "lärare" : showAdmins ? "administratör" : "användare"}}</h4>
+                    <article class="modal-body">
+                        <form class="form" ng-submit="addUserSubmit()">
+                            <ul class="ulSize">
+                                <li>
+                                    <input ng-model="newUserLastName" type="text" placeholder="Efternamn" ng-required="true"/>
+                                </li>
+                                <li>
+                                    <input ng-model="newUserFirstName" type="text" placeholder="Förnamn" ng-required="true"/>
+                                </li>
+                                <li>                                    
+                                    <input ng-model="newUserName" name="tjena" type="text" placeholder="Användarnamn" ng-required="true"/>
+                                </li>
+                                <li>
+                                    <input ng-model="newUserPassword" type="text" placeholder="Lösenord" ng-required="true"/>
+                                </li>
+                            </ul>
+                            <input class="btn btn-default buttonS" type="submit" value="Lägg till">
+                        </form>
+                    </article>
+                </div>
+            </main>
+        </section>
+    </section>
+    <section class="col-md-12">
+        <h2>Prov att dela ut</h2>
+
+        <article class="row">
+            <p class="col-md-4">
+                <input type="text" placeholder="Filtrera på Namn" class="text-box" ng-model="filterExamNames">
+            </p>
+        </article>
+        <article class="table-max-height-300">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Namn</th>
+                        <th>Startdatum</th>
+                        <th>Slutdatum</th>
+                    </tr>
+                </thead>
+                <tbody class="">
+                    <tr ng-repeat="exam in exams | filter: {name: filterExamNames}">
+                        <td>{{exam.name}}</td>
+                        <p>tjosan {{exam.timeLimit}}</p>
+                        <td>
+                            <input type="date" ng-model="startDate">
+                        </td>
+                        <td>
+                            <input type="date" ng-model="endDate">
+                        </td>
+                        <td>
+                            <button ng-click="showExam(exam)" data-toggle="modal" data-target="#showExamModal">Visa prov</button>
+                        </td>
+                        <td>
+                            <button ng-click="removeExam(exam.name)">Ta bort</button>
+                        </td>
+                        <section id="showExamModal" class="modal fade" role="dialog">
+                            <main class="modal-dialog popupSize">
+                                <div class="modal-content">
+                                    <button type="button" class="close" data-dismiss="modal">x</button>
+                                    <h2 class="modal-title">{{examToShow.name}}</h2>
+                                    <article class="modal-body">
+                                        <main class="question-head" ng-repeat="question in examToShow.questions">
+                                            <section>
+                                                <h4>{{question.text}}</h4>
+                                                <div class="question-box" ng-if="question.type !== 'ranked'">
+                                                    <form>
+                                                        <ul>
+                                                            <li ng-repeat="answer in question.answers">
+                                                                <input type="{{question.type}}" name="question.text"/>{{answer.text}}
+                                                            </li>
+                                                        </ul>
+                                                    </form>
+                                                </div>
+                                                <div class="question-box" ng-if="question.type === 'ranked'">
+                                                    <ul>
+                                                        <li ng-repeat="answer in question.answers">
+                                                            <select>
+                                                                <option ng-repeat="($index, answer) in question.answers" value="{{$index + 1}}">{{$index + 1}}</option>
+                                                            </select>
+                                                            {{answer.text}}
+                                                        </li>
+                                                    </ul>
+
+                                                </div>
+                                            </section>
+                                        </main>
+                                    </article>
+                                </div>
+                            </main>
+                        </section>
+                        <td>
+                            <button ng-click="openSendExamForm(exam)" data-toggle="modal" data-target="#sendToStudentsModal">Skicka till studenter</button>
+                        </td>
+                        <section id="sendToStudentsModal" class="modal fade" role="dialog">
+                            <main class="modal-dialog popupSize">
+                                <div class="modal-content">
+                                    <button type="button" class="close" data-dismiss="modal">x</button>
+                                    <h2 class="modal-title">Skicka prov till</h2>
+                                    <article class="modal-body">
+                                        <ul>
+                                            <li class=" question-box" ng-repeat="student in students">
+                                                <input type="checkbox" value="{{student.username}}">{{student.firstName + ' ' + student.lastName}}
+                                            </li>
+                                        </ul>
+                                        <button ng-click="sendExamToStudents();" data-toggle="modal" data-target="">Skicka</button>
+                                    </article>
+                                </div>
+                            </main>
+                        </section>
+                    </tr>
+                </tbody>
+            </table>
+        </article>
+    </section>
+</main>

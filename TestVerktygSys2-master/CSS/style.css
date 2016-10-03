@@ -1,0 +1,33 @@
+html{	
+    padding:0;
+    margin:0;
+}
+
+header {
+    text-align: center;
+}
+
+main {
+    margin: 30px;
+}
+
+main div, form input[type="submit"] {
+    text-align: center;
+    margin: auto;
+}
+
+section select, section input{
+	text-align: left;
+}
+
+
+.answer-text{
+    margin:5px 0 5px 0;
+}
+.question-head{
+    background-color: #dedede;
+
+}
+.score-box{
+    text-align: right;
+}
